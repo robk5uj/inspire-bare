@@ -61,8 +61,10 @@
     </select>
     <input class="formbutton" type="submit" name="action" value="Search" />
     </form>
-    <p>You can now search on citation count <br />
-    (must be written in this format with no spaces).  </p>
+    </p>
+    <hr />
+    <p>    Can search on eprint type using primarch (primary archive).<br />
+    Logic operators (<b>and</b>, <b>or</b>, <b>not</b>) work left to right.
     <form action="/search" method="get">
       <input name="p" type="text" value="find a unruh or t cauchy not t problem and primarch gr-qc" size="65" />
       <select name="f7">
@@ -73,7 +75,21 @@
       <input class="formbutton" type="submit" name="action14" value="Search" />
     </form>
      </p>
-<hr />
+
+    <hr />
+    <p>Citation searching on individual articles can still be done.
+    <form action="/search" method="get">
+      <input name="p" type="text" value="find c Phys.Rev.Lett.,28,1421 or c arXiv:0711.4556" size="65" $
+      <select name="f8">
+        <option value="">any field</option>
+        <option>title</option>
+        <option>author</option>
+      </select>
+      <input class="formbutton" type="submit" name="action15" value="Search" />
+     </form>
+     </p>
+    <hr />
+
 <p>Direct searching on dates can be done.
     <form action="/search" method="get">
 
@@ -105,6 +121,7 @@
   <li>topcite 100+  &rArr; cited:200+ <br /> Note: this number can be anything, e.g.
      <br />  cited:357+ or cited:300->3000
   </li>
+  <li>Searching for eprints must include the "arXiv" prefix, e.g. arXiv:0711.4556</li>
   <li>All dates must be in the ISO format <br /> <b>yyyy(-mm(-dd))</b> <br />
 
      e.g. 2003, 2003-06, 2003-06-27 <br />
@@ -157,7 +174,7 @@
           </form>
         <form action="/search" method="get">
           4.
-          <input name="p" type="text" value="author:witten refersto:author:parke" size="60" id="p3" />
+          <input name="p" type="text" value="author:witten refersto:author:"parke, s j"' size="60" id="p3" />
           <input class="formbutton" type="submit" name="action11" value="Search" />
         </form>
         <form action="/search" method="get">
@@ -214,13 +231,80 @@
     <td style="white-space: nowrap" height="2"></td>
     <td valign="top"></td>
   </tr>
-</table>
-
-
-<p>
- If you have questions or comments about these searches or if there is
-anything you would like to see added to this help page,
- contact <a href="mailto:feedback@inspirebeta.net">feedback@inspirebeta.net</a>
-</p><p> Also see the <a href="search-guide<lang:link/>">_(Search
-    Guide)_</a> for more detailed help on INSPIRE searching.
-</p>
+ </table>
+ <p>4. SPIRES-type Searching on Authors with Initials </p>
+ <p>You can search with varying degrees of precision on author names.</p>
+ <table width="100%" border="1" cellpadding="10" cellspacing="0">
+ <tr>
+ <td width="50%" valign="top" style="white-space: nowrap"><div align="center"><strong>WORKS </strong></div></td>
+ <td width="50%" valign="top"><div align="center"><strong>DOESN'T WORK</strong></div></td>
+ </tr>
+ <tr>
+ <td width="50%" valign="top" style="white-space: nowrap"> <form action="/search" method="get">
+   <input type="hidden" name="ln3" value="en" />
+   <input size="44" type="text" name="p" value="find a thomas,a w  and crewther, r j" />
+   <select name="f3">
+     <option value="" selected="selected">any field</option>
+     <option>title</option>
+     <option>author</option>
+   </select>
+   <input class="formbutton" type="submit" name="action3" value="Search" />
+ </form></td>
+ <td width="50%">
+ <form action="/search" method="get">
+   <input type="hidden" name="ln3" value="en" />
+   <input size="44" type="text" name="p" value="find a crewther not thomas" />
+   <select name="f3">
+     <option value="" selected="selected">any field</option>
+     <option>title</option>
+     <option>author</option>
+   </select>
+   <input class="formbutton" type="submit" name="action3" value="Search" />
+ </form>
+  </td>
+ </tr>
+ <tr>
+ <td width="50%" valign="top" style="white-space: nowrap"><form action="/search" method="get">
+   <input type="hidden" name="ln5" value="en" />
+   <input size="46" type="text" name="p" value="find a thomas, a w and crewther" />
+   <select name="f6">
+     <option value="" selected="selected">any field</option>
+     <option>title</option>
+     <option>author</option>
+   </select>
+   <input class="formbutton" type="submit" name="action13" value="Search" />
+ </form></td>
+ <td width="50%">&nbsp;</td>
+ </tr>
+ <tr>
+   <td valign="top" style="white-space: nowrap"><form action="/search" method="get">
+     <input type="hidden" name="ln4" value="en" />
+     <input size="46" type="text" name="p" value="author:&quot;thomas, a w&quot; author:&quot;crewther, r j&quot;" />
+     <select name="f4">
+       <option value="" selected="selected">any field</option>
+       <option>title</option>
+       <option>author</option>
+     </select>
+     <input class="formbutton" type="submit" name="action4" value="Search" />
+   </form></td>
+   <td>&nbsp;</td>
+ </tr>
+ <tr>
+   <td valign="top" style="white-space: nowrap"><form action="/search" method="get">
+     <input type="hidden" name="ln2" value="en" />
+     <input size="35" type="text" name="p" value="find a thomas, a and crewther, r" />
+      <select name="f2">
+       <option value="" selected="selected">any field</option>
+       <option>title</option>
+       <option>author</option>
+     </select>
+     <input class="formbutton" type="submit" name="action2" value="Search" />
+   </form></td>
+   <td>&nbsp;</td>
+ </tr>
+ <tr>
+   <td style="white-space: nowrap" height="2"></td>
+   <td valign="top">??? <br /> Please send any spires searches that don't work to
+    <a href="mailto:feedback@inspire-hep.net">feedback@inspire-hep.net</a></td>
+ </tr>
+ </table>
