@@ -20,7 +20,7 @@
 <!-- WebDoc-Page-Title: _(Search tips for INSPIRE)_ -->
 <!-- WebDoc-Page-Revision: $Id$ -->
 
-<h5>Search with SPIRES familiar syntax</h5>
+<h5>Search with SPIRES familiar syntax (updated 2011-01-28)</h5>
 <table width="100%" border="1" cellpadding="10" cellspacing="0">
 <tr>
   <td class="tips-lhs">
@@ -43,7 +43,7 @@
 <tr>
    <td class="tips-lhs">
       <form action="/search" method="get">
-      <input name="p" type="text" value="author:hawking affiliation:&quot;cambridge u., damtp&quot; year:2005->2010" size="50" id="p" />
+      <input name="p" type="text" value="author:hawking affiliation:&quot;cambridge u., damtp&quot; year:2005->2010" size="51" id="p" />
       <input class="formbutton" type="submit" name="action6" value="Search" />
       </form>
       <br />
@@ -65,10 +65,6 @@
 <td class="tips-lhs">
     <form action="/search" method="get">
       <input name="p" type="text" value="thomas crewther quark 2002" size="40" />
-    <select name="f"><option value="">any field</option>
-                     <option>title</option>
-                     <option>author</option>
-    </select>
     <input class="formbutton" type="submit" name="action" value="Search" />
     </form></td>
 <td class="tips-rhs">
@@ -90,11 +86,6 @@
 <td class="tips-lhs">
  <form action="/search" method="get">
       <input name="p" type="text" value='find j phys.rev.lett.,62,1825' size="40" />
-      <select name="f8">
-        <option value="">any field</option>
-        <option>title</option>
-        <option>author</option>
-      </select>
       <input class="formbutton" type="submit" name="action15" value="Search" />
     </form>
      </p>
@@ -112,12 +103,7 @@
 
 <td class="tips-lhs">
  <form action="/search" method="get">
-      <input name="p" type="text" value='find j "Phys.Rev.Lett.,105*" or j Phys.Lett. and a thomas' size="40" />
-      <select name="f8">
-        <option value="">any field</option>
-        <option>title</option>
-        <option>author</option>
-      </select>
+      <input name="p" type="text" value='find j "Phys.Rev.Lett.,105*" or j Phys.Lett. and a thomas' size="42" />
       <input class="formbutton" type="submit" name="action15" value="Search" />
     </form>
      </p>
@@ -139,11 +125,6 @@ Using quotes can help when using truncation.
     <form action="/search" method="get">
 
       <input name="p" type="text" value="find d 1997-11-18" size="40" />
-      <select name="f9">
-        <option value="">any field</option>
-        <option>title</option>
-        <option>author</option>
-      </select>
       <input class="formbutton" type="submit" name="action16" value="Search" />
 
     </form>
@@ -171,7 +152,7 @@ Using quotes can help when using truncation.
 <tr>
 <td class="tips-lhs">
     <form action="/search" method="get">
-      <input name="p" type="text" value="find eprint arxiv:0711.2908 or arxiv:0705.4298 or eprint hep-ph/0504227" size="50" />
+      <input name="p" type="text" value="find eprint arxiv:0711.2908 or arxiv:0705.4298 or eprint hep-ph/0504227" size="56" />
       <input class="formbutton" type="submit" name="action17" value="Search" />
     </form>
 </td>
@@ -204,11 +185,7 @@ Using quotes can help when using truncation.
 <td class="tips-lhs">
 <p>You can now search on citation count directly</p>
     <form action="/search" method="get">
-    <input name="p" type="text" value="find a m albrow and j phys.rev.lett. and t quark* cited:200->99999" size="40" />
-    <select name="f"><option value="">any field</option>
-                     <option>title</option>
-                     <option>author</option>
-    </select>
+    <input name="p" type="text" value="find a m albrow and j phys.rev.lett. and t quark* cited:200->99999" size="51" />
     <input class="formbutton" type="submit" name="action" value="Search" />
     </form> </p>
 </td>
@@ -226,11 +203,6 @@ Using quotes can help when using truncation.
 <p>Citation searching on individual articles can still be done.
     <form action="/search" method="get">
       <input name="p" type="text" value="find c Phys.Rev.Lett.,28,1421 or c arXiv:0711.4556" size="40" />
-      <select name="f8">
-        <option value="">any field</option>
-        <option>title</option>
-        <option>author</option>
-      </select>
       <input class="formbutton" type="submit" name="action15" value="Search" />
     </form>
      </p>
@@ -244,11 +216,6 @@ Using quotes can help when using truncation.
 <p>Or the entire journal.
     <form action="/search" method="get">
       <input name="p" type="text" value='find c "Phys.Rev.Lett.,*"' size="40" />
-      <select name="f8">
-        <option value="">any field</option>
-        <option>title</option>
-        <option>author</option>
-      </select>
       <input class="formbutton" type="submit" name="action15" value="Search" />
     </form>
      </p>
@@ -347,11 +314,6 @@ But for this you might prefer the refers to and cited by operators below...
 
       <input type="hidden" name="ln" value="en" />
       <input size="40" type="text" name="p" value="find af &quot;harvard u.&quot;" />
-      <select name="f5">
-        <option value="" selected="selected">any field</option>
-        <option>title</option>
-        <option>author</option>
-      </select>
       <input class="formbutton" type="submit" name="action5" value="Search" />
     </form>
 
