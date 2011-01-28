@@ -129,6 +129,14 @@ Using quotes can help when using truncation.
 
     </form>
      </p>
+<p>
+    <form action="/search" method="get">
+
+      <input name="p" type="text" value="find da 2011-01-26 and title neutrino*" size="40" />
+      <input class="formbutton" type="submit" name="action16A" value="Search" />
+
+    </form>
+     </p>
 </td>
 
 <td class="tips-rhs">
