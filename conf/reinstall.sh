@@ -20,7 +20,7 @@
 # It must be readable only by the owner and have no other permissions
 
 export CONFIGURE_OPTS="--with-python=/usr/bin/python"
-export CFG_INSPIRE_DIR="/opt/inspire/"
+export CFG_INSPIRE_DIR="/opt/inspire"
 export CONFIGFILE="$CFG_INSPIRE_DIR/.invenio_install.conf"
 export G_DB_RESET="FALSE"
 export G_INSPIRE="FALSE"
@@ -50,19 +50,17 @@ for arg in $@; do
         echo "And I won't blow away the MySQL database by default.  Inspect my source"
         echo "to learn what you need to know."
         echo "By default I will install invenio from a single repo"
-        echo "call me with --inspire-old to install from a separate inspire repo"
-        echo "call me with --inspire-db to switch to a preexisting inspire db"
-        echo "combine w/ --reset-db might create the inspire-test db from scratch"
+        echo "call me with --inspire to also install an inspire repo"
+        echo "By default I will clean temporary files from your repos"
+        echo "call me with --dirty to leave those things alone"
+        echo "use --reset-db to drop and create the requested db from scratch"
         exit 0
     elif [ $arg == '--reset-db' ]; then
         echo "Ok, I'll reset the DB"
         export G_DB_RESET="TRUE"
-        export RELOAD_RECORDS="TRUE"
     elif [ $arg == '--dirty' ]; then
         echo "Ok, I won't clean the source tree"
         export CLEAN_INSTALL="FALSE"
-    elif [ $arg == '--reload' ]; then
-        export RELOAD_RECORDS="TRUE"
     elif [ $arg == '--inspire' ]; then
         echo "Ok, I'll install INSPIRE from the separate repo and use the  inspire conf"
         export G_INSPIRE="TRUE"
@@ -84,15 +82,6 @@ echo
 sudo -v; 
 # Stop running bibsched so that we don't create zombies
 sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/bibsched stop
-
-
-if [ $G_DB_RESET == 'TRUE' ]; then
-    echo -e "DROPPING AND RECREATING THE DATABASE...";
-    echo "drop database $INVENIO_DB;" | mysql -u root --password=$MYSQL_ROOT_PASS; 
-    echo "CREATE DATABASE $INVENIO_DB DEFAULT CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $INVENIO_DB.* TO $INVENIO_DB_USER@localhost IDENTIFIED BY '$INVENIO_DB_PASS';" | mysql -u root --password=$MYSQL_ROOT_PASS; 
-    echo "DONE.";
-fi
-
 
 
 if [ $CLEAN_INSTALL == "TRUE" ]; then
@@ -123,29 +112,40 @@ else
   exit 1;
 fi
 
+echo -e "INSTALLING \"OPTIONAL\" COMPONENTS...";
+sudo -u $CFG_INVENIO_USER make install-mathjax-plugin
+sudo -u $CFG_INVENIO_USER make install-jquery-plugins
+#sudo -u $CFG_INVENIO_USER make install-fckeditor-plugin
+#sudo -u $CFG_INVENIO_USER make install-pdfa-helper-files
+
 if [ $G_INSPIRE = 'TRUE' ]; then
     echo -e "Installing INSPIRE from repo $INSPIRE_REPO"
     cd $INSPIRE_REPO
     sudo make install
-    sudo make install-dbchanges
     sudo chown -R $CFG_INVENIO_USER:$CFG_INVENIO_USER $CFG_INVENIO_PREFIX
     echo "DONE."
 fi
 
 
 if [ $G_DB_RESET == 'TRUE' ]; then
-   echo -e "SETTING UP THE INVENIO TABLES AND DEMO SITE..."
-   sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inveniocfg --create-tables \
-   && echo -e "\n** MYSQL TABLES CREATED SUCCESSFULLY\n" \
-   && sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inveniocfg --load-webstat-conf \
-   && echo -e "\n** WEBSTAT CONF LOADED SUCCESSFULLY\n" 
-   sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inveniocfg --create-demo-site
-   echo -e "\n** DEMO SITE INSTALLED\n"
+    echo -e "DROPPING AND RECREATING THE DATABASE...";
+    echo "drop database $INVENIO_DB;" | mysql -u root --password=$MYSQL_ROOT_PASS; 
+    echo "CREATE DATABASE $INVENIO_DB DEFAULT CHARACTER SET utf8; GRANT ALL PRIVILEGES ON $INVENIO_DB.* TO $INVENIO_DB_USER@localhost IDENTIFIED BY '$INVENIO_DB_PASS';" | mysql -u root --password=$MYSQL_ROOT_PASS; 
+    echo "DONE.";
+
+    echo -e "SETTING UP THE INVENIO TABLES AND DEMO SITE..."
+    sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inveniocfg --create-tables \
+    && echo -e "\n** MYSQL TABLES CREATED SUCCESSFULLY\n" \
+    && sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inveniocfg --load-webstat-conf \
+    && echo -e "\n** WEBSTAT CONF LOADED SUCCESSFULLY\n" 
+    sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inveniocfg --create-demo-site
+    echo -e "\n** DEMO SITE INSTALLED\n"
 
 
    if [ $G_INSPIRE == 'TRUE' ]; then
-#       sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inveniocfg --drop-demo-site --yes-i-know
- #      echo -e "\n** DROPPED DEMO SITE\n" 
+# FIXME: things seem to work better without dropping our demo site.  Why is this? 
+#      sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inveniocfg --drop-demo-site --yes-i-know
+#      echo -e "\n** DROPPED DEMO SITE\n" 
        
        cd $INSPIRE_REPO
        sudo -u $CFG_INVENIO_USER make install-dbchanges
@@ -182,8 +182,10 @@ fi
 sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inveniocfg --create-apache-conf 
 
 # save aside the last confs just in case we are interested
-sudo mkdir $CFG_INSPIRE_DIR/last_generated_conf/
-sudo cp $CFG_INVENIO_PREFIX/etc/apache/*conf $CFG_INSPIRE_DIR/last_generated_conf/
+if [ ! -d $CFG_INSPIRE_DIR/last_generated_conf/ ]; then
+    sudo mkdir -v $CFG_INSPIRE_DIR/last_generated_conf/
+fi
+sudo cp -v $CFG_INVENIO_PREFIX/etc/apache/*conf $CFG_INSPIRE_DIR/last_generated_conf/
 
 # but use the known working versions we store in /opt/inspire
 for file in $CFG_INSPIRE_DIR/invenio-apache-vhost*.conf; do
@@ -209,7 +211,9 @@ fi
 #echo -e " done.\nPlease cat /var/spool/cron/apache to make sure I didn't\n"
 #echo -e "accidentally create multiple entries.\n"
 
-sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inspire_update_feedboxes.py -d
+if [ $G_INSPIRE == "TRUE" ]; then
+    sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/inspire_update_feedboxes.py -d
+fi
 
 
 echo -e "\nSo we've gotten this far, let's try starting the standard system\nservices, such as webcoll.\n"

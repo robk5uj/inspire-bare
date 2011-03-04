@@ -81,10 +81,11 @@ convert-small:
 	@echo "Please run 'make upload-small' now."
 
 convert-inst:
-	@echo -n "* Converting small SPIRES record sample..."
-	$(BINDIR)/bibconvert -c `pwd`/INST2MARC.xsl < ${SMALL_BASE}.xml > ${SMALL_BASE}.marcxml
-	@echo -n " done."
-	@echo "Please run 'make upload-small' now."
+	@echo -n "* Institution conversion currently broken.  Use 'make get-inst-marc' instead."
+#	@echo -n "* Converting small SPIRES record sample..."
+#	$(BINDIR)/bibconvert -c `pwd`/INST2MARC.xsl < ${SMALL_BASE}.xml > ${SMALL_BASE}.marcxml
+#	@echo -n " done."
+#	@echo "Please run 'make upload-small' now."
 
 
 
