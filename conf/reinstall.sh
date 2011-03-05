@@ -34,6 +34,7 @@ export G_INSPIRE_DB="FALSE"
 export APACHE_RESTART="sudo /etc/init.d/httpd restart"
 export CLEAN_INSTALL="TRUE"
 export USE_BIBCONVERT="FALSE"
+export INSTALL_PLUGINS="FALSE"
 
 if [ -e $CONFIGFILE ]; then 
     source $CONFIGFILE
@@ -112,11 +113,14 @@ else
   exit 1;
 fi
 
-echo -e "INSTALLING \"OPTIONAL\" COMPONENTS...";
-sudo -u $CFG_INVENIO_USER make install-mathjax-plugin
-sudo -u $CFG_INVENIO_USER make install-jquery-plugins
+if [ $INSTALL_PLUGINS == "TRUE" ]; then
+    echo -e "INSTALLING \"OPTIONAL\" COMPONENTS...";
+    sudo -u $CFG_INVENIO_USER make install-mathjax-plugin
+    sudo -u $CFG_INVENIO_USER make install-jquery-plugins
 #sudo -u $CFG_INVENIO_USER make install-fckeditor-plugin
 #sudo -u $CFG_INVENIO_USER make install-pdfa-helper-files
+fi
+
 
 if [ $G_INSPIRE = 'TRUE' ]; then
     echo -e "Installing INSPIRE from repo $INSPIRE_REPO"
