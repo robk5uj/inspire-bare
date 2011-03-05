@@ -252,7 +252,7 @@ reset-inspire-collection-configuration:
 	echo "TRUNCATE collection_portalbox" | $(BINDIR)/dbexec
 	echo "TRUNCATE collection_rnkMETHOD" | $(BINDIR)/dbexec
 	echo "INSERT INTO collection VALUES (2, 'INSPIRE', NULL, 0, NULL)" | $(BINDIR)/dbexec
-	echo "INSERT INTO collection VALUES (1, 'HEP', '970__a:\'SPIRES\' or 980__a:\"HEP\" or 980__a:\"CORE\"', 0, NULL)" | $(BINDIR)/dbexec
+	echo "INSERT INTO collection VALUES (1, 'HEP', '970__a:\'SPIRES\' or 980__a:\"HEP\"', 0, NULL)" | $(BINDIR)/dbexec
 	echo "INSERT INTO collection VALUES (3, 'Institutions',	'980__a:\"INSTITUTION\"', 0, NULL)" | $(BINDIR)/dbexec
 	echo "INSERT INTO collection_collection VALUES (2,1,'r',1)" | $(BINDIR)/dbexec
 	echo "INSERT INTO collection_collection VALUES (2,3,'r',3)" |$(BINDIR)/dbexec
