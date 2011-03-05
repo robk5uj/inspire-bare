@@ -172,14 +172,14 @@ We now recommend that you use this site instead of SPIRES<br />
 <div class="navbar">
 <a id="nav-hep" href="%(siteurl)s?ln=%(ln)s">Hep</a>
 ::
+<a id="nav-inst" href="%(siteurl)s/collection/Institutions">Inst</a>
+::
 <a id="nav-help" href="%(siteurl)s/help/?ln=%(ln)s">%(msg_help)s</a>
 &nbsp;&nbsp;&nbsp;
 ..::..
 &nbsp;&nbsp;&nbsp;
 <strong>SPIRES</strong>
 <a id="nav-hepnames" href="http://www.slac.stanford.edu/spires/hepnames/">HepNames</a>
-::
-<a id="nav-inst" href="http://www.slac.stanford.edu/spires/institutions/">Inst</a>
 ::
 <a id="nav-conf" href="http://www.slac.stanford.edu/spires/conferences/">Conf</a>
 ::
