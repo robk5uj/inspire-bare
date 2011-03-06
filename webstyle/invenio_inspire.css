@@ -225,11 +225,47 @@ clear:right;
     border-bottom: 1px solid #fc9;
     margin:0em;
     padding:8px 6px 5px 6px;
-    background-color:#Fc9;
     background-color:#FC9;
     color:#69C;
-	/*text-decoration:underline;*/
+
 }
+
+.HEP a#nav-hep{
+    border:1px solid #999;
+    border-bottom: 1px solid #fc9;
+    margin:0em;
+    padding:8px 6px 5px 6px;
+    background-color:#FC9;
+    color:#69C;
+}
+.HEP a:hover#nav-hep{
+   text-decoration: underline;
+}
+
+.help a#nav-help{
+    border:1px solid #999;
+    border-bottom: 1px solid #fc9;
+    margin:0em;
+    padding:8px 6px 5px 6px;
+    background-color:#FC9;
+    color:#69C;
+}
+.help a:hover#nav-help{
+   text-decoration: underline;
+}
+
+.Institutions #nav-inst a{
+    border:1px solid #999;
+    border-bottom: 1px solid #fc9;
+    margin:0em;
+    padding:8px 6px 5px 6px;
+    background-color:#FC9;
+    color:#69C;
+}
+.Institutions #nav-inst a:hover{
+   text-decoration: underline;
+}
+
 
 .headerbox {
    color: #000;
@@ -410,10 +446,10 @@ a.navtrail:hover {
    float: right;
 }
 
-.home .pagebodystripemiddle {
+.pagebodystripemiddle {
    width: 73%;
 }
-.home .pagebodystriperight {
+.pagebodystriperight {
    width: 25%;
 }
 

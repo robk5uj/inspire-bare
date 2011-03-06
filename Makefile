@@ -251,11 +251,8 @@ reset-inspire-collection-configuration:
 	echo "TRUNCATE collection_collection" | $(BINDIR)/dbexec
 	echo "TRUNCATE collection_portalbox" | $(BINDIR)/dbexec
 	echo "TRUNCATE collection_rnkMETHOD" | $(BINDIR)/dbexec
-	echo "INSERT INTO collection VALUES (2, 'INSPIRE', NULL, 0, NULL)" | $(BINDIR)/dbexec
 	echo "INSERT INTO collection VALUES (1, 'HEP', '970__a:\'SPIRES\' or 980__a:\"HEP\"', 0, NULL)" | $(BINDIR)/dbexec
-	echo "INSERT INTO collection VALUES (3, 'Institutions',	'980__a:\"INSTITUTION\"', 0, NULL)" | $(BINDIR)/dbexec
-	echo "INSERT INTO collection_collection VALUES (2,1,'r',1)" | $(BINDIR)/dbexec
-	echo "INSERT INTO collection_collection VALUES (2,3,'r',3)" |$(BINDIR)/dbexec
+	echo "INSERT INTO collection VALUES (2, 'Institutions',	'980__a:\"INSTITUTION\"', 0, NULL)" | $(BINDIR)/dbexec
 	echo "INSERT INTO collection_rnkMETHOD VALUES (1, 1, 200)" | $(BINDIR)/dbexec
 	echo "INSERT INTO collection_rnkMETHOD VALUES (1, 3, 100)" | $(BINDIR)/dbexec
 	echo "INSERT INTO collectionname VALUES (1, 'en', 'ln', 'HEP')" | $(BINDIR)/dbexec
@@ -264,7 +261,7 @@ reset-inspire-collection-configuration:
 	echo "UPDATE collection_externalcollection SET type=1 WHERE type=2" | $(BINDIR)/dbexec
 	echo "TRUNCATE collectiondetailedrecordpagetabs" | $(BINDIR)/dbexec
 	echo "INSERT INTO collectiondetailedrecordpagetabs (id_collection, tabs) VALUES (1, 'metadata;references;citations;files;plots')" | $(BINDIR)/dbexec
-	echo "INSERT INTO collectiondetailedrecordpagetabs (id_collection, tabs) VALUES (3, 'metadata')" | $(BINDIR)/dbexec
+	echo "INSERT INTO collectiondetailedrecordpagetabs (id_collection, tabs) VALUES (1, 'metadata')" | $(BINDIR)/dbexec
 
 	$(BINDIR)/webcoll -u admin
 	@echo "Please run the webcoll task just submitted, if your bibsched daemon is not in an automatic mode."
