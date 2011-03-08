@@ -18,7 +18,7 @@
 ## You should have received a copy of the GNU General Public License
 ## along with Invenio; if not, write to the Free Software Foundation, Inc.,
 ## 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""BibFormat element - Prints address for Institution.  
+"""BibFormat element - Prints address for Institution.
 """
 __revision__ = "$Id$"
 from invenio.config import CFG_SITE_LANG
@@ -30,7 +30,7 @@ def format_element(bfo,separator):
     out = ''
     address = ''
     addresses = bfo.fields("371__a")
-    out = separator.join(addresses) 
+    out = separator.join(addresses)
     return out
 def escape_values(bfo):
     return 0

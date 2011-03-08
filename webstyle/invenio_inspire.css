@@ -2270,6 +2270,20 @@ ul.detailedrecordactions{
    font-size:small;
 }
 
+/* Actions in mini-panel of detailed record view*/
+ul.detailedrecordfiles{
+   list-style-image: url(arrow_link-icon-15x11-right.gif) ;
+   padding-left: 5em;
+   text-align:left;
+   margin:0.05em;
+}
+.detailedrecordfiles{
+   text-decoration:none;
+   color:#555;
+   font-weight:700;
+   font-size:small;
+}
+
 /* Grading stars for mini-panel in detailed record view*/
 #detailedrecordminipanelreview div.star a{
    text-indent:-9000px; /*Hide text*/

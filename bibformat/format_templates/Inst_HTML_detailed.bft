@@ -10,7 +10,7 @@ width="30%">
 
 
 <table><tr><td>
-<BFE_INSPIRE_INST_ADDRESS  separator=", "/> <br>
+<BFE_INSPIRE_INST_ADDRESS  separator="<br />"/> <br>
 
 
 <BFE_URL prefix="" suffix="" default="" escape="" style="" separator="; "/>

@@ -18,22 +18,28 @@
 ## You should have received a copy of the GNU General Public License
 ## along with Invenio; if not, write to the Free Software Foundation, Inc.,
 ## 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""BibFormat element - Prints record count for bfo search, provides link to search.  
+"""BibFormat element - Prints record count for BFO search, provides link to search.
 """
 __revision__ = "$Id$"
-from invenio.config import CFG_SITE_LANG
+from invenio.config import CFG_SITE_LANG, CFG_SITE_URL
+
 from invenio.search_engine import search_pattern
 
-def format_element(bfo,pvalue,fvalue,hrefflag,tag):
-    #populate the bfo search field
-    #
+def format_element(bfo, fvalue, tag, default = "0 Records found"):
+    """ uses tag to fetch a tag from the given bfo, searches that value in
+    fvalue, and outputs the number of records found, linked to a search
+    for those recs.
+    @param fvalue field to search
+    @param tag tag from record to use to search
+    @param default returned if there are no results
+    """
     out = ''
     reccnt = 0
-    fvalue = "affiliation"
-    tag="110__u"
     pvalue = bfo.field(tag)
-    reccnt = len(search_pattern(p=pvalue, f=fvalue).tolist())  
-    out = "<a href=\"../search?f=" + fvalue + "&p=" + pvalue + "\">" +str(reccnt) + "</a> Records"
-    return out
+    reccnt = len(search_pattern(p=pvalue, f=fvalue).tolist())
+    if reccnt > 0:
+        out = "<a href=\"" + CFG_SITE_URL + "/search?f=" + fvalue + "&p=" + pvalue + "\">" +str(reccnt) + "</a> Records"
+        return out
+    return default
 def escape_values(bfo):
     return 0
