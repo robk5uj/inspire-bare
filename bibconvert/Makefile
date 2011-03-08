@@ -41,21 +41,25 @@ load-large-sample-of-records: get-large clean-large convert-large upload-large
 
 get-small:
 	@echo "* Downloading the file please be patient..."
+	rm -f $(SMALL_BASE).xml
 	wget $(SMALL_URL)
 	@echo "* Done.  Please run 'make convert-small' now."
 
 get-small-marc:
 	@echo "* Downloading the file please be patient..."
+	rm -f $(SMALL_BASE).marcxml
 	wget $(MARC_URL)
 	@echo "* Done.  Please run 'make upload-small' now."
 
 get-inst:
 	@echo "* Downloading the file please be patient..."
+	rm -f $(INST_BASE).xml
 	wget $(INST_URL)
 	@echo "* Done.  Please run 'make convert-inst' now."
 
 get-inst-marc:
 	@echo "* Downloading the file please be patient..."
+	rm -f $(INST_BASE).marcxml
 	wget $(INST_MARC_URL)
 	@echo "* Done.  Please run 'make upload-inst' now."
 
