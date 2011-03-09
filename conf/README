@@ -6,10 +6,10 @@ Setup and Config
 
 1) Create an /opt/inspire directory  
 
-(or other directory outside of source trees and invneio location, set it
-in CFG_INSPIRE_DIR)
-
 The directory should be writeable by you, and others installing on this machine
+
+(If you don't like this location, create it somewhere else, taking care to be outside of source trees and invemio location.  If you use a different location, please set it
+in CFG_INSPIRE_DIR in the config file .invenio-install.conf described below.)
 
 
 2) In this directory place the following five files:
