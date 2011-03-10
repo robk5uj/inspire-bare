@@ -30,7 +30,7 @@ Please *make sure* that you have these 3 files saved in /opt/inspire/ before pro
 
 * The fourth file may or may not exist. If it exists it is:
 
-cp <your inspire repo>/.config-local.mk /opt/inspire/
+cp <your inspire repo>/config-local.mk /opt/inspire/
 
 (Don't worry if you don't have it, just skip this step)
 
