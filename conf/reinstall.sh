@@ -88,9 +88,23 @@ sudo -u $CFG_INVENIO_USER $CFG_INVENIO_PREFIX/bin/bibsched stop
 if [ $CLEAN_INSTALL == "TRUE" ]; then
     sudo rm -rf $CFG_INVENIO_PREFIX; 
     cd $INSPIRE_REPO
+    git status
+    echo "[INFO] I WILL REMOVE ALL UNTRACKED FILES ABOVE"
+    echo "[INFO] STOP ME BY PRESSING Ctrl-C!"
+    for i in 0 1 2 3; do
+        echo -n "."
+        sleep 1
+    done
     sudo git clean -x -f;
     cp $CFG_INSPIRE_DIR/config-local.mk .
     cd $INVENIO_REPO
+    git status
+    echo "[INFO] I WILL REMOVE ALL UNTRACKED FILES ABOVE"
+    echo "[INFO] STOP ME BY PRESSING Ctrl-C!"
+    for i in 0 1 2 3; do
+        echo -n "."
+        sleep 1
+    done
     sudo git clean -x -f;
     aclocal && automake -a -c && autoconf -f && ./configure $CONFIGURE_OPTS  0</dev/null 
 fi

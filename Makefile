@@ -341,6 +341,9 @@ reset-inspire-search-sort-field-configuration:
 
 reset-inspire-useraccess-configuration:
 	@echo ">>> Resetting user access configuration:"
+#FIXME - truncating accARGUMENT is necc. if building on top of Atlantis -
+#should probably build from scratch instead...
+	echo "TRUNCATE accARGUMENT;" | $(BINDIR)/dbexec
 	echo "UPDATE accROLE SET firerole_def_src='deny all' WHERE name='basketusers'" | $(BINDIR)/dbexec
 	echo "UPDATE accROLE SET firerole_def_src='deny all' WHERE name='loanusers'" | $(BINDIR)/dbexec
 	echo "UPDATE accROLE SET firerole_def_src='deny all' WHERE name='groupusers'" | $(BINDIR)/dbexec
