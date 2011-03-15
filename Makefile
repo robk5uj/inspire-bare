@@ -222,13 +222,19 @@ reset-inspire-field-configuration:
 	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (24, 8, 100)" | $(BINDIR)/dbexec
 	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (24, 11, 90)" | $(BINDIR)/dbexec
 	### inst field_tags
-	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (25, 65, 90)" | $(BINDIR)/dbexec
+	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (25,	65, 130)" | $(BINDIR)/dbexec
+	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (25, 66, 120)" | $(BINDIR)/dbexec
+	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (25, 67, 110)" | $(BINDIR)/dbexec
+	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (25, 68, 100)" | $(BINDIR)/dbexec
+	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (25, 69, 90)" | $(BINDIR)/dbexec
+	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (25, 70, 80)" | $(BINDIR)/dbexec
+	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (25, 71, 200)" | $(BINDIR)/dbexec
 	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (26, 66, 90)" | $(BINDIR)/dbexec
 	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (27, 67, 90)" | $(BINDIR)/dbexec
 	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (28, 68, 90)" | $(BINDIR)/dbexec
 	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (29, 69, 100)" | $(BINDIR)/dbexec
 	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (29,	70, 90)" | $(BINDIR)/dbexec
-	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (30, 71, 90)" | $(BINDIR)/dbexec
+	echo "INSERT INTO field_tag (id_field,id_tag,score) VALUES (30,	71, 90)" | $(BINDIR)/dbexec
 	@echo ">>> Done reset-inspire-field-configuration."
 
 reset-inspire-index-configuration:
@@ -272,12 +278,10 @@ reset-inspire-index-configuration:
 	echo "INSERT INTO idxINDEX (id,name,description,last_updated,stemming_language) VALUES (17, 'postalcode', 'postal code', '0000-00-00 00:00:00', '')" | $(BINDIR)/dbexec
 	echo "INSERT INTO idxINDEX (id,name,description,last_updated,stemming_language) VALUES (18, 'institution', 'institution', '0000-00-00 00:00:00', '')" | $(BINDIR)/dbexec
 	echo "INSERT INTO idxINDEX_field (id_idxINDEX,id_field) VALUES (16, 25)" | $(BINDIR)/dbexec
-	echo "INSERT INTO idxINDEX_field (id_idxINDEX,id_field) VALUES (16, 26)" | $(BINDIR)/dbexec
-	echo "INSERT INTO idxINDEX_field (id_idxINDEX,id_field) VALUES (16, 27)" | $(BINDIR)/dbexec
-	echo "INSERT INTO idxINDEX_field (id_idxINDEX,id_field) VALUES (16, 28)" | $(BINDIR)/dbexec
-	echo "INSERT INTO idxINDEX_field (id_idxINDEX,id_field) VALUES (16, 29)" | $(BINDIR)/dbexec
 	echo "INSERT INTO idxINDEX_field (id_idxINDEX,id_field) VALUES (17, 26)" | $(BINDIR)/dbexec
 	echo "INSERT INTO idxINDEX_field (id_idxINDEX,id_field) VALUES (18, 30)" | $(BINDIR)/dbexec
+	echo "INSERT INTO idxINDEX_field (id_idxINDEX,id_field) VALUES (1, 25)" | $(BINDIR)/dbexec
+
 	echo "CREATE TABLE IF NOT EXISTS idxPAIR17F (\
   id mediumint(9) unsigned NOT NULL auto_increment,\
   term varchar(100) default NULL,\
