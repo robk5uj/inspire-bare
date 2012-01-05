@@ -1,4 +1,4 @@
-<name>Jobs ASCII Brief</name>
+<name>Jobs text Brief</name>
 <description>Brief description of job listing</description>
 <div class="record_body">
 <BFE_CATALOGING_DATE_CREATION prefix="<strong>" suffix=":</strong> " />
