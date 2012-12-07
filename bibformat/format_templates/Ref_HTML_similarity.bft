@@ -1,0 +1,11 @@
+<name>Ref HTML similarity</name>
+<description>Revised small HTML record for the reference display BFE BFO HS2 call</description>
+<BFE_INSPIRE_AUTHORS limit="1" prefix="" suffix=",&nbsp" print_affiliations="no" interactive="no" name_last_first="no" extension=" <em>et al.</em>" default="" print_links="no"/>
+<i>
+<a href="/record/<BFE_FIELD tag="001" />
+<BFE_CLIENT_INFO var="ln" prefix="?ln=">">
+<BFE_INSPIRE_TITLE_BRIEF suffix="," force_title_case="yes"/></a>
+</i>
+<BFE_INSPIRE_PUBLI_INFO prefix=" " suffix="" default="" escape="0" markup="html" separator="; " style="eu"/>
+<BFE_INSPIRE_ARXIV prefix=" [" suffix="]" default="" escape="" category="yes" links="no" mirrors="yes"/>
+<BFE_REPORT_NUMBERS prefix="&nbsp;--&nbsp;" suffix="" default="" escape="" separator=", " limit="9999" extension=""/>
