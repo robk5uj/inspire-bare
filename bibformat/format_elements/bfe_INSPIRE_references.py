@@ -43,7 +43,7 @@ import string
 #The first regex is used to separate out journal title, volume and number and the second one is used in moving letters in the 
 #volume number to the end of the journal title because some databases like crossref and ADS use them there.
 
-regexp = re.compile(r"(?P<j>.+)?,(?P<v>.+)?,(?P<p>\d+)?")
+regexp = re.compile(r"(?P<j>.+)?,(?P<v>.+)?,(?P<p>.+)?")
 volregex = re.compile(r"(?P<let>[A-Z])(?P<num>.*)")
 
 #ajs is a dictionary of standard journal abbrev.keys and ADS title code values.  Used to create ADS URLs
