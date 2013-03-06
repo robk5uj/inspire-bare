@@ -2403,3 +2403,15 @@ input:-ms-input-placeholder {
 }
 
 /* end of inspire.css */
+
+.banner_info {
+   background: rgb(218, 235, 252) url('information.png') 15px 50% no-repeat;
+   padding: 10px 20px 10px 45px;
+   border: 2px solid #b5d4fe;
+   font-size: 0.8em;
+   font-weight: bold;
+}
+
+.banner-div {
+   margin-right: 20px;
+}
