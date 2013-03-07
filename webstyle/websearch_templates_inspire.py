@@ -309,13 +309,15 @@ class Template(DefaultTemplate):
                  <td class="searchboxexample">
                    %(example_query_html)s
                  </td>
-              </tr></table>
+              </tr>
+              </table>
               <!--<tr valign="baseline">
                <td class="searchboxbody" colspan="2" align="left">
                </td>
               </tr>
              </tbody>
             </table>-->
+            <p class="banner_info">Take part in a short survey to help us improve the INSPIRE website. It takes only 5 minutes:<br /> <a href="http://inspirehep.net/survey">http://inspirehep.net/survey</a></p>
             ''' % {'ln' : ln,
                    'sizepattern' : CFG_WEBSEARCH_LIGHTSEARCH_PATTERN_BOX_WIDTH,
                    'langlink': langlink,
