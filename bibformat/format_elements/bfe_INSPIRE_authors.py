@@ -37,6 +37,7 @@ def format_element(bfo, limit, separator='; ',
            id_links = "no",
            markup = "html",
            link_extension = "no",
+           suffix = ''
            ):
     """
     Prints the list of authors of a record.
@@ -78,6 +79,14 @@ def format_element(bfo, limit, separator='; ',
     lastauthor = ''
     authors = bfo.fields('100__', repeatable_subfields_p=True)
     authors.extend(bfo.fields('700__', repeatable_subfields_p=True))
+
+    # If there are no author check for corporate author in 110__a field
+    if len(authors) == 0:
+        authors = bfo.fields('110__', repeatable_subfields_p=True)
+        # For corporate authors we don't want to reverse names order
+        name_last_first = 'yes'
+        # And we don't want to create links
+        print_links = 'no'
 
     # Keep real num of authors. fix + affiliations_separator.join(author['u']) + \
     nb_authors = len(authors)
@@ -255,22 +264,20 @@ def format_element(bfo, limit, separator='; ',
                 coll_display =  "[" + coll_display + "]"
 
 
-
     # Start outputting, depending on options and number of authors
     if colls and (interactive != "yes" or short_coll):
         return coll_display
 
     if limit.isdigit() and nb_authors > int(limit) and interactive != "yes":
-        if markup == 'latex' :
+        if markup == 'latex':
             lastauthor = authors.pop()
             lastauthor = ' and ' + lastauthor
             limit = int(limit) - 1
-            
+
         return separator.join(authors[:int(limit)]) + lastauthor + \
                extension
 
-
-    elif interactive == "yes" and  ((colls and not short_coll) or (limit.isdigit() and nb_authors > int(limit))):
+    elif interactive == "yes" and ((colls and not short_coll) or (limit.isdigit() and nb_authors > int(limit))):
         out = '''
         <script>
         function toggle_authors_visibility(){
@@ -296,9 +303,9 @@ def format_element(bfo, limit, separator='; ',
         }
 
         </script>
-        ''' % {'show_less':_("Hide"),
-               'show_more':_("Show all %i authors") % nb_authors,
-               'extension':extension}
+        ''' % {'show_less': _("Hide"),
+               'show_more': _("Show all %i authors") % nb_authors,
+               'extension': extension}
 
 #        out += '<a name="show_hide" />'
         if colls:
@@ -317,14 +324,18 @@ def format_element(bfo, limit, separator='; ',
         out += '<script>set_up()</script>'
         return out
     elif nb_authors > 0:
-        if markup == 'latex' :
-            if nb_authors > 1 :
-                lastauthor = authors.pop()
-                lastauthor = ' and ' + lastauthor 
+        lastauthor = authors.pop()
+        # remove the dot from last author when the suffix starts with dot
+        # (to avoid two consecutive dots)
+        if lastauthor[-1] == suffix[0] == '.':
+            lastauthor = lastauthor[:-1]
+        if markup == 'latex' and nb_authors > 1:
+            lastauthor = ' and ' + lastauthor
         return separator.join(authors) + lastauthor
 
 # we know the argument is unused, thanks
 # pylint: disable-msg=W0613
+
 
 def escape_values(bfo):
     """
