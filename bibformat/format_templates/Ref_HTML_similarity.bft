@@ -1,0 +1,13 @@
+<name>Ref_HTML_similarity</name>
+<description>Formats display of HEP paper references if references are in INSPIRE.  Called by HS2.bfo from bfe_INSPIRE_references.py</description>
+<BFE_INSPIRE_REFAUTHORS limit="1" prefix="" suffix=",&nbsp;" print_affiliations="no" interactive="no" name_last_first="no" extension=" <em>et al.</em>" default="" print_links="no"/>
+
+<i><b>
+<a href="/record/<BFE_FIELD tag="001" />
+<BFE_CLIENT_INFO var="ln" prefix="?ln=">">
+<BFE_INSPIRE_REFTITLE_BRIEF suffix="," force_title_case="yes" brief="yes"/></a>
+</b></i>
+<BFE_INSPIRE_REF_PUBLI_INFO pubnotestyle="eu" pubnotemark="html" 
+  pubnotepre="&nbsp;&nbsp;" pubnotesuf="" pubnotesep="&nbsp;&nbsp;"
+  arxivlinks="no" arxivcategory="yes" arxivprepubnote="&nbsp;&nbsp;[" arxivsufpubnote="]." arxivprenopub="&nbsp;&nbsp;" arxivsufnopub="." reportpre="&nbsp;&nbsp;" reportsuf="." reportlimit="9999" reportsep=", " reportext="" />
+

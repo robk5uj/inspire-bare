@@ -1,0 +1,24 @@
+<name>HEP_references</name>
+<description>Format template for reference display pages for papers in HEP.  Called by HHR.bfo</description>
+<div style="margin-left:10px;margin-right:10px;min-height:10px;">
+<div id='referenceinp_link_box'>
+<span id='referenceinp_link_span'>
+<a href='/record/<BFE_FIELD tag="001" />/export/hrf'>Update these references</a></span><span> | 
+Show references in:&nbsp;&nbsp;
+<a href="http://inspirehep.net/search?ln=en&amp;ln=en&amp;p=citedby%3Arecid%3A<BFE_FIELD tag="001" />
+&amp;of=hlxe&amp;action_search=Search&amp;sf=&amp;so=d&amp;rm=&amp;rg=100&amp;sc=0">LaTeX (EU)</a>
+&nbsp;|&nbsp;
+<a href="http://inspirehep.net/search?ln=en&amp;ln=en&amp;p=citedby%3Arecid%3A<BFE_FIELD tag="001" />
+&amp;of=hlxu&amp;action_search=Search&amp;sf=&amp;so=d&amp;rm=&amp;rg=100&amp;sc=0">LaTeX (US)</a>
+&nbsp;|&nbsp;
+<a href="http://inspirehep.net/search?ln=en&amp;ln=en&amp;p=citedby%3Arecid%3A<BFE_FIELD tag="001" />
+&amp;of=hx&amp;action_search=Search&amp;sf=&amp;so=d&amp;rm=&amp;rg=100&amp;sc=0">BibTeX</a>
+&nbsp;|&nbsp;
+<a href="http://inspirehep.net/search?ln=en&amp;ln=en&amp;p=citedby%3Arecid%3A<BFE_FIELD tag="001" />
+&amp;of=hb&amp;action_search=Search&amp;sf=&amp;so=d&amp;rm=&amp;rg=100&amp;sc=0">Default format</a>&nbsp;
+<br /><br />
+</span></div>
+<p></p>
+<BFE_INSPIRE_REFERENCES default="<h2>No references were found for that record.<h2>" prefix='' suffix='' reference_prefix='' 
+reference_suffix=''/>
+</div>
