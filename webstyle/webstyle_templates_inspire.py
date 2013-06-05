@@ -251,6 +251,8 @@ class Template(DefaultTemplate):
             body_css_classes = []
         body_css_classes.append(navmenuid)
 
+        uri = req.unparsed_uri
+
         cssskin = CFG_WEBSTYLE_TEMPLATE_SKIN != 'default' and '_' + CFG_WEBSTYLE_TEMPLATE_SKIN or '',
 
         if CFG_WEBSTYLE_INSPECT_TEMPLATES:
@@ -361,6 +363,7 @@ $(function () {
  <title>%(headertitle)s - INSPIRE-HEP</title>
  <link rev="made" href="mailto:%(sitesupportemail)s" />
  <link rel="stylesheet" href="%(inspire_css)s" type="text/css" />
+ %(canonical_and_alternate_urls)s
  <link rel="alternate" type="application/rss+xml" title="%(sitename)s RSS" href="%(rssurl)s" />
  <link rel="search" type="application/opensearchdescription+xml" href="%(siteurl)s/opensearchdescription" title="%(sitename)s" />
  <link rel="unapi-server" type="application/xml" title="unAPI" href="%(unAPIurl)s" />
@@ -368,6 +371,7 @@ $(function () {
  <meta http-equiv="Content-Language" content="%(ln)s" />
  <meta name="description" content="%(description)s" />
  <meta name="keywords" content="%(keywords)s" />
+ <meta name="msvalidate.01" content="EA9805F0F62E4FF22B98853713964B28" />
  <script type="text/javascript" src="%(cssurl)s/js/jquery.min.js"></script>
  <script type="text/javascript">
  //<![CDATA[
@@ -444,6 +448,7 @@ $(function () {
           'siteurl' : CFG_BASE_URL,
           'sitesecureurl' : CFG_SITE_SECURE_URL,
           'cssurl' : CFG_BASE_URL,
+          'canonical_and_alternate_urls' : self.tmpl_canonical_and_alternate_urls(uri),
           'inspire_css' : "%s/" % CFG_BASE_URL + auto_version_url("img/" + 'invenio%s.css' % cssskin),
           'rssurl': rssurl,
           'ln' : ln,
