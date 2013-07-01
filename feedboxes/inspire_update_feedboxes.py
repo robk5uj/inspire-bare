@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 #!/usr/bin/env python
+=======
+>>>>>>> installation: new Twitter API
 """
 NOTE: in order for this script to work, you have to put in
 CFG_ETCDIR/twitter-credentials.txt a four-lines text file containing in order:
@@ -10,6 +13,7 @@ CFG_ETCDIR/twitter-credentials.txt a four-lines text file containing in order:
 """
 
 import time
+<<<<<<< HEAD
 import sys
 
 try:
@@ -19,6 +23,9 @@ except:
     warnings.warn("Install twitter package. Otherwise the twitter box in the main page will not work.")
     sys.exit(0)
 
+=======
+import twitter
+>>>>>>> installation: new Twitter API
 import os
 import cgi
 import re
@@ -34,7 +41,10 @@ CFG_PBX_ID = 2
 RE_TWITTER_PLACEMARK = re.compile("%s(.*?)%s" % (re.escape("<!-- TWITTER_START -->"), re.escape("<!-- TWITTER_END -->")), re.M + re.S)
 
 CFG_TWITTER_BOX_TPL = """
+<<<<<<< HEAD
 <!-- TWITTER_START -->
+=======
+>>>>>>> installation: new Twitter API
 <table class="sidebar_bugboxtable">
   <tbody><tr>
    <td class="bugboxtd">
@@ -55,7 +65,10 @@ CFG_TWITTER_BOX_TPL = """
   </tr>
  </tbody>
 </table>
+<<<<<<< HEAD
 <!-- TWITTER_END -->
+=======
+>>>>>>> installation: new Twitter API
 """
 
 def get_twitter_api(path=CFG_TWITTER_CREDENTIALS_PATH):
@@ -109,4 +122,8 @@ if __name__ == "__main__":
         update_portalbox()
     except Exception, err:
         register_exception(alert_admin=True)
+<<<<<<< HEAD
         print >> sys.stderr, "ERROR: issue in updating twitter box: %s" % err
+=======
+        print >> sys.stderr("ERROR: issue in updating twitter box: %s" % err)
+>>>>>>> installation: new Twitter API
