@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+#!/usr/bin/env python
+>>>>>>> 92d3fce37acdc8b97cdccec41d90bb248237eba2
 """
 NOTE: in order for this script to work, you have to put in
 CFG_ETCDIR/twitter-credentials.txt a four-lines text file containing in order:
@@ -25,6 +29,10 @@ CFG_PBX_ID = 2
 RE_TWITTER_PLACEMARK = re.compile("%s(.*?)%s" % (re.escape("<!-- TWITTER_START -->"), re.escape("<!-- TWITTER_END -->")), re.M + re.S)
 
 CFG_TWITTER_BOX_TPL = """
+<<<<<<< HEAD
+=======
+<!-- TWITTER_START -->
+>>>>>>> 92d3fce37acdc8b97cdccec41d90bb248237eba2
 <table class="sidebar_bugboxtable">
   <tbody><tr>
    <td class="bugboxtd">
@@ -45,6 +53,10 @@ CFG_TWITTER_BOX_TPL = """
   </tr>
  </tbody>
 </table>
+<<<<<<< HEAD
+=======
+<!-- TWITTER_END -->
+>>>>>>> 92d3fce37acdc8b97cdccec41d90bb248237eba2
 """
 
 def get_twitter_api(path=CFG_TWITTER_CREDENTIALS_PATH):
