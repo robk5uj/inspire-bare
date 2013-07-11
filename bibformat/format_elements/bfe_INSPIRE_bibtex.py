@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-         apply abstract switch and bfo/bfts
 ##
 ## This file is part of Invenio.
 ## Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2011 CERN.
@@ -20,11 +20,17 @@
 
 
 import re
+import cgi
+from invenio.search_engine import search_pattern
+from invenio.search_engine import get_fieldvalues
 from invenio.config import CFG_SITE_LANG
 from invenio.bibformat_elements import bfe_report_numbers as bfe_repno
+from invenio.bibformat import format_record
 
+#from invenio.bibformat_engine import eval_format_element, get_format_element
+#pubnoteFE = get_format_element('bfe_inspire_publi_info', with_built_in_params=True)
 
-def format_element(bfo, width="50"):
+def format_element(bfo, width="50", show_abstract="False"):
     """
     Prints a full BibTeX record.
 
@@ -50,71 +56,115 @@ def format_element(bfo, width="50"):
 
     # Initialize user output
     out = "@"
-
+    erratum_note = ''
+    displaycnt = 0
     def texified(name, value):
-        """Closure of format_bibtex_field so we don't keep pasing static data
+        """Closure of format_bibtex_field so we don't keep passing static data
     
         Saves a little bit of boilerplate.
         """
         return format_bibtex_field(name, value, name_width, value_width)
 
     #Print entry type
-    import invenio.bibformat_elements.bfe_collection as bfe_collection
-    collection = bfe_collection.format_element(bfo=bfo, kb="DBCOLLID2BIBTEX")
-    if collection == "":
-        out += "article"
-        collection = "article"
+#    import invenio.bibformat_elements.bfe_collection as bfe_collection
+#    collection = bfe_collection.format_element(bfo=bfo, kb="DBCOLLID2BIBTEX")
+
+    #This is a sequence of boolean collection switches initialized as false, to test for and switch on one and only one collection 
+    #type and make the transition from INSPIRE collection types, to bibtex collection labels. 
+
+    collections = bfo.fields("980")
+    col_swCP=False
+    col_swT=False
+    col_swP=False
+    col_swB=False
+#    col_swA=False  #perhaps for future use?
+
+    if not collections:
+        collection = "article"  #default will be article i.e. preprint
+    else:
+        for collection in collections:
+
+            if "ConferencePaper" in collection['a']:
+                col_swCP=True
+            if "THESIS" in collection['a'] or "Thesis" in collection['a']:
+                col_swT=True
+            if "PROCEEDINGS" in collection['a'] or "Proceedings" in collection['a']:
+                col_swP=True
+            if "BOOK" in collection['a'] or "Book" in collection['a']:
+                col_swB=True
+#            if "arXiv" in collection['a']:
+#                col_swA=True
+            
+        if col_swCP:
+            collection = 'inproceedings'
+        elif col_swT:
+            collection = 'phdthesis'
+        elif col_swP:
+            collection = 'proceedings'
+        elif col_swB:
+            collection = 'book'
+        else:
+            collection = 'article'
+
+    #Master thesis has to be identified    
+    if collection == 'phdthesis' and bfo.field("502__b") == 'Master': 
+        out += 'mastersthesis'
     else:
         out += collection
-
     out += "{"
 
     # BibTeX key
     import invenio.bibformat_elements.bfe_texkey as bfe_texkey
     key = bfe_texkey.format_element(bfo, harvmac=False)
 
-#    key = ''
-#    for external_keys in bfo.fields("035"):
-#        if external_keys['9'] == "SPIRESTeX" and external_keys['z']:
-#            key = external_keys['z']
-#    if not key:
-#        #contruct key in spires like way  need to store an make unique
-#        ####FIXME
-#        key = bfo.field("100a").split(' ')[0].lower() + ":" + \
-#              bfo.field("269c").split('-')[0] + \
-#              chr((recID % 26) + 97) + chr(((recID / 26) % 26) + 97)
     out += key + ','
 
         #If author cannot be found, print a field key=recID
     import invenio.bibformat_elements.bfe_INSPIRE_authors as bfe_authors
     authors = bfe_authors.format_element(bfo=bfo,
-                                 limit="5",
+                                 limit="10",
                                  separator=" and ",
                                  extension=" and others",
                                  collaboration = "no",
                                  print_links="no",
-                                 name_last_first = "yes")
+                                 name_last_first = "yes",
+                                 markup = "bibtex")
+
+    #bibtex does authors a bit differently with spaces and initials so this sequence does some cleaning up
     if authors:
-
-        rx = re.compile('([A-Za-z\,\'\-\s]+?\.)([A-Z][a-z]+)')
-        auspace = rx.sub(r'\1 \2', authors, count=0)
-        out += texified("author", auspace)
-
-    else:
-        out += texified("key", recID)
-
+        asub1 = re.sub(r'([A-Z][a-z]{0,1}\.)',r'\1 ',authors)
+        asub2 = re.sub(r'  (and)',r' \1',asub1)       
+        asub3 = re.sub(r' ,',r',',asub2)
+        asub4 = re.sub(r' $',r'',asub3)
     # Editors
     import invenio.bibformat_elements.bfe_editors as bfe_editors
     editors = bfe_editors.format_element(bfo=bfo, limit="10",
                                  separator=" and ",
                                  extension="",
                                  print_links="no")
-    out += texified("editor", editors)
+
+    if editors:
+        out += texified("editor", editors)
+    elif authors:
+        out += texified("author", asub4)
 
     # Title
     import invenio.bibformat_elements.bfe_INSPIRE_title_brief as bfe_title
     title = bfe_title.format_element(bfo=bfo, brief="yes")
-    out += texified("title", '{' + title + '}')
+    title = '{' + title + '}'
+    out += texified("title", title)
+
+    #This code sequence is for getting the conference paper's parent proceedings volume information
+    if collection == "inproceedings":
+        cnum = bfo.field("773__w")
+        if cnum != "":
+            cnum = cnum.replace("/", "-")
+            search_res = search_pattern(p="111__g:" + str(cnum) + " and 980__a:CONFERENCES")
+            if search_res:
+                recID = list(search_res)[0]             
+                booktitle = get_fieldvalues(recID,'773__x',repetitive_values=True)[0]
+                if booktitle != "":
+                    out += texified("booktitle", booktitle)
 
     # Institution
     if collection ==  "techreport":
@@ -157,14 +207,20 @@ def format_element(bfo, width="50"):
     collaborations = []
     for collaboration in bfo.fields("710__g"):
         if collaboration not in collaborations:
-            collaborations.append(collaboration)
+            trncd_collab = re.sub(r'(.+) [Cc]ollaboration',r'\1',collaboration)
+            collaborations.append(trncd_collab)
     out += texified("collaboration", ", ".join(collaborations))
 
     # School
     if collection == "phdthesis":
-        university = bfo.field("502__b")
+        university = bfo.field("100__u")
 
         out += texified("school", university)
+
+        thesisyear = bfo.field("502__d")
+        if thesisyear != "":
+            out += texified("year", thesisyear)
+
 
     # Address
     if collection == "book" or \
@@ -188,21 +244,84 @@ def format_element(bfo, width="50"):
 
         out += texified("address", ". ".join(addresses))
 
+        pubyear = get_year(bfo.field("260__c"))
+        if pubyear != "":
+            out += texified("year", pubyear)
+        url = bfo.field("8564_u")
+        if url != "":
+            out += texified("url", url)
+
+
+
     # Journal
     if collection == "article":
-        journals = []
-        host_title = bfo.field("773__p")
-        if host_title != "":
-            journals.append(host_title)
-        journal = bfo.field("909C4p")
-        if journal != "":
-            journals.append(journal)
 
-        out += texified("journal", ". ".join(journals))
+
+        journal_infos = bfo.fields("773__") 
+        for journal_info in journal_infos:
+            journal_source = cgi.escape(journal_info.get('p', ''))
+            volume         = cgi.escape(journal_info.get('v', ''))
+            year           = cgi.escape(journal_info.get('y', ''))
+            number         = cgi.escape(journal_info.get('n', ''))
+            pages          = cgi.escape(journal_info.get('c', ''))
+            if year == "":
+                year = get_year(bfo.field("269__c"))
+            elif year == "":
+                year = get_year(bfo.field("260__c"))
+            elif year == "":
+                year = get_year(bfo.field("502__c"))
+            elif year == "":
+                year = get_year(bfo.field("909C0y"))
+            str773 = ''            
+            if journal_source:
+                jsub = re.sub(r'\.([A-Z])',r'. \1',journal_source)
+                if not (volume or number or pages or doi):
+                    str773 += 'Submitted to: ' + jsub
+                else:
+                    str773 += jsub
+                if displaycnt == 0:
+                    out += texified("journal", str773)
+            if volume:       # preparing volume and appending it
+                if re.search("JHEP", str773):
+                    volume = re.sub(r'\d\d(\d\d)',r'\1',volume)
+                str773 += volume
+                if displaycnt == 0:
+                    out += texified("volume", volume)
+            if year and displaycnt == 0:
+                out += texified("year", year)
+            elif year:
+                year = '(' + year + ')'                
+            if number:       # preparing number; it's appended below
+                number = ',no.' + number
+                if displaycnt == 0:
+                    out += texified("number", number)
+            if pages:
+                dashpos = pages.find('-') 
+                if dashpos > -1:
+                    pages = pages[:dashpos]
+                if displaycnt == 0:
+                    out += texified("pages", pages)
+            str773 += number
+            if pages:
+                str773 += ',' + pages
+            str773 += year
+
+    #N.B. In cases where there is more than one journal in journals iteration the second pass is usually a cite for a translation or 
+    #something else to appear in a note.  Therefore erratum_note is set to display this data later on.  
+
+    # DOI
+            
+            if displaycnt == 0 and collection == "article":
+                doi = bfo.field("0247_a") + bfo.field("773__a")
+                out += texified("doi", doi)
+
+            displaycnt += 1            
+            if displaycnt > 1 :
+                errata = '[' + str773 + ']'    
+                erratum_note = texified("note", errata)
 
     # Number
-    if collection == "techreport" or \
-           collection == "article":
+    if collection == "techreport" or collection == "proceedings":
         numbers = []
         host_number = bfo.field("773__n")
         if host_number != "":
@@ -213,8 +332,8 @@ def format_element(bfo, width="50"):
         out += texified("number", ". ".join(numbers))
 
     # Volume
-    if collection == "article" or \
-           collection == "book":
+    if collection == "book" or collection == "proceedings":
+
         volumes = []
         host_volume = bfo.field("773__v")
         if host_volume != "":
@@ -222,17 +341,19 @@ def format_element(bfo, width="50"):
         volume = bfo.field("909C4v")
         if volume != "":
             volumes.append(volume)
+        volume = bfo.field("490__v")
+        if volume != "":
+            volumes.append(volume)
 
         out += texified("volume", ". ".join(volumes))
 
     # Series
-    if collection == "book":
+    if collection == "book" or collection == "proceedings":
         series = bfo.field("490__a")
         out += texified("series", series)
 
     # Pages
-    if collection == "article" or \
-           collection == "inproceedings":
+    if collection == "inproceedings":
         pages = []
         host_pages = bfo.field("773c")
         if host_pages != "":
@@ -245,23 +366,17 @@ def format_element(bfo, width="50"):
                     pages.append(phys_pagination)
 
         out += texified("pages", ". ".join(pages))
+        doi = bfo.field("0247_a")
+        if doi != "":
+            out += texified("doi", doi)
+        year = bfo.field("269__c")
+        if year != "":
+            year = re.sub(r'(\d{4})-\d\d',r'\1',year)
+            out += texified("year", year)
 
-    # DOI
-    if collection == "article":
-        dois = bfo.fields("0247_a") + bfo.fields("773__a")
-        out += texified("doi", ", ".join(set(dois)))
+    #Erratum note stuff here
 
-    # Year
-    year = bfo.field("773__y")
-    if year == "":
-        year = get_year(bfo.field("269__c"))
-        if year == "":
-            year = get_year(bfo.field("260__c"))
-            if year == "":
-                year = get_year(bfo.field("502__c"))
-                if year == "":
-                    year = get_year(bfo.field("909C0y"))
-    out += texified("year", year)
+    out += erratum_note
 
     # Eprint (aka arxiv number)
     import invenio.bibformat_elements.bfe_INSPIRE_arxiv as bfe_arxiv
@@ -283,12 +398,16 @@ def format_element(bfo, width="50"):
 
 
     # Other report numbers
-    out += texified("reportNumber", 
+    out += texified("note", 
                     bfe_repno.get_report_numbers_formatted(bfo, 
                                                            separator=', ', 
                                                            limit='1000', 
                                                            skip=eprints[0]))
+#    if collection == "inproceedings" and :
+#        pubnote = bfo.field("500__a")
+#        out += texified("note", pubnote)
 
+ 
     # Add %%CITATION line
     import invenio.bibformat_elements.bfe_INSPIRE_publi_info_latex as bfe_pil
     import invenio.bibformat_elements.bfe_INSPIRE_publi_coden as bfe_coden
@@ -296,8 +415,18 @@ def format_element(bfo, width="50"):
                                     pubnote=bfe_coden.get_coden_formatted(bfo, ','),
                                     repno=bfe_repno.get_report_numbers_formatted(bfo, '', '1'),
                                     bfo=bfo)
+
+    #bfe_repno appends "ETC." to last rept. no. if more than one.  We don't want that.
+    cite_as = re.sub(r' ETC.',r'',cite_as)
     out += texified("SLACcitation", cite_as)
 
+    #display abstract switch in cases of a user desiring to include an abstract 
+    if show_abstract == "True":
+        abstract = bfo.field("520__a")
+        out += texified("abstract", abstract)
+
+    #The very last element in the bibtex list ends in a comma which we don't want. 
+    out = re.sub(r',$',r'',out)
     out +="\n}"
     return out
 
@@ -474,5 +603,3 @@ def get_month(date, ln=CFG_SITE_LANG, default=""):
                 pass
 
     return default
-
-

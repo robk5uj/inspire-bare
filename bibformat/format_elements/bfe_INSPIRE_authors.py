@@ -37,7 +37,6 @@ def format_element(bfo, limit, separator='; ',
            id_links = "no",
            markup = "html",
            link_extension = "no",
-           suffix = ''
            ):
     """
     Prints the list of authors of a record.
@@ -56,7 +55,7 @@ def format_element(bfo, limit, separator='; ',
     @param name_last_first if yes (default) print last, first  otherwise first last
     @param collaboration if yes (default) uses collaboration name in place of long author list, if available
     @param id_links if yes (default = no) prints link based on INSPIRE IDs if available - only used if print_links = yes
-    @param markup html (default) or latex controls small markup differences
+    @param markup html (default) or latex or bibtex controls small markup differences
     @param link_extension if 'yes' link the extension to the detailed
     record page
 
@@ -80,14 +79,6 @@ def format_element(bfo, limit, separator='; ',
     authors = bfo.fields('100__', repeatable_subfields_p=True)
     authors.extend(bfo.fields('700__', repeatable_subfields_p=True))
 
-    # If there are no author check for corporate author in 110__a field
-    if len(authors) == 0:
-        authors = bfo.fields('110__', repeatable_subfields_p=True)
-        # For corporate authors we don't want to reverse names order
-        name_last_first = 'yes'
-        # And we don't want to create links
-        print_links = 'no'
-
     # Keep real num of authors. fix + affiliations_separator.join(author['u']) + \
     nb_authors = len(authors)
 
@@ -97,18 +88,18 @@ def format_element(bfo, limit, separator='; ',
     # allows to show all of them.
     if limit.isdigit() and nb_authors > int(limit) \
            and interactive != "yes":
-        if bfo.field('710g'):   # check for colln note
+        if bfo.field('710g'):   #check for colln note
             authors = authors[:1]
         else:
-
-            authors = authors[:int(limit)]
+             authors = authors[:1]
+#            authors = authors[:int(limit)]
 
     # Process authors to add link, affiliation and highlight
     for author in authors:
 
         if author.has_key('a'):
-            author['a'] = author['a'][0]  # There should not be
-                                          # repeatable subfields here.
+            author['a'] = author['a'][0] # There should not be
+                                         # repeatable subfields here.
             if highlight == 'yes':
                 from invenio import bibformat_utils
                 author['a'] = bibformat_utils.highlight(author['a'],
@@ -129,12 +120,29 @@ def format_element(bfo, limit, separator='; ',
             #for latex we do initials only  (asn assume first last)
             if markup == 'latex':
                 if first_last_match:
-                    first = re_initials.sub('\g<initial>.~', \
-                                        first_last_match.group('first_names'))
+                    first = re_initials.sub('\g<initial>.~',first_last_match.group('first_names'))
                     author['display'] = first  + \
                                         first_last_match.group('last') + \
                                         first_last_match.group('extension')
 
+            #for bibtex there are a few things about names that are handled differently
+            if markup == 'bibtex':
+                if first_last_match:
+                     junior = first_last_match.group('extension')                
+                     if re.search(' ?([J,S]r.)?$', junior) or re.search('(I{2,3})$', junior) or re.search('(IV)$', junior):
+                         
+                         author['display'] = first_last_match.group('last') + \
+                                             junior + ', ' + \
+                                             first_last_match.group('first_names')
+                     else:
+
+                         author['display'] = first_last_match.group('last') + ', ' + \
+                                             first_last_match.group('first_names') + junior
+
+                     #Russian atomic name has to have {\relax } around it
+                     atomicsearch = author['display']
+                     if re.search(' ?Yu.? ?$',atomicsearch):
+                         author['display'] = re.sub(r'^(.+)?Yu\.(.*)$',r'\1{\relax Yu}.\2',atomicsearch)
 
             if print_links.lower() == "yes":
 
@@ -179,9 +187,12 @@ def format_element(bfo, limit, separator='; ',
                               affiliations_separator.join(author['ilink']) + \
                               affiliation_suffix
 
+
+
 #
 #  Consolidate repeated affiliations
 #
+
     last = ''
     authors.reverse()
     for author in authors:
@@ -199,12 +210,13 @@ def format_element(bfo, limit, separator='; ',
     if print_affiliations == 'yes':
 ##      100__a (100__e)  700__a (100__e) (100__u)
         if print_affiliation_first.lower() != 'yes':
-            authors = [author.get('display', '') + author.get('e', '') + author.get('u', '')
+            authors = [author.get('display', '') + author.get('e', '') + author.get('u', '') \
                        for author in authors]
 
         else:
-            authors = [author.get('u', '') + author.get('display', '')
+            authors = [author.get('u', '') + author.get('display', '')  \
                        for author in authors]
+
 
     else:
         authors = [author.get('display', '')
@@ -228,10 +240,10 @@ def format_element(bfo, limit, separator='; ',
         short_coll = False
         colls = [re_coll.sub('', coll) for coll in colls]
         if print_links.lower() == "yes":
-            colls = ['<a class="authorlink" href="' +
-                     CFG_BASE_URL + '/search' +
-                     '?p=collaboration:' + quote("'" + coll + "'") +
-                     '&amp;ln=' + bfo.lang +
+            colls = ['<a class="authorlink" href="' + \
+                     CFG_BASE_URL + '/search' + \
+                     '?p=collaboration:' + quote("'" + coll + "'") + \
+                     '&amp;ln='+ bfo.lang + \
                      '">'+escape(coll)+'</a>' for coll in colls]
 
         coll_display = " and ".join(colls)
@@ -240,39 +252,42 @@ def format_element(bfo, limit, separator='; ',
             if len(colls) > 1:
                 coll_display += 's'
         if nb_authors > 1:
-            if markup == 'latex':
+            if markup == 'latex' or markup == 'bibtex':
                 coll_display =  authors[0] + extension + "  [" + \
                                coll_display + "]"
             elif interactive == "yes":
-                coll_display += " ("  + authors[0] + " "
-                extension += ")"
+                coll_display += " ("  + authors[0] + " " + \
+                extension + ")"
             else:  #html
                 coll_display += " (" + authors[0] + extension + ")"
         elif nb_authors == 1:
             short_coll = True
-            if markup == 'latex':
-                coll_display = authors[0] + " [" + coll_display + "]"
+            if markup == 'latex' or markup == 'bibtex':
+                coll_display =  authors[0] + " [" + coll_display + "]"
             else:  #html
-                coll_display += " (" + authors[0] + " for the collaboration)"
+                coll_display +=  " (" + authors[0] + " for the collaboration)"
         elif nb_authors == 0:
             short_coll = True
-            if markup == 'latex':
-                coll_display = "[" + coll_display + "]"
+            if markup == 'latex' or markup == 'bibtex':
+                coll_display =  "[" + coll_display + "]"
+
+
 
     # Start outputting, depending on options and number of authors
     if colls and (interactive != "yes" or short_coll):
         return coll_display
 
     if limit.isdigit() and nb_authors > int(limit) and interactive != "yes":
-        if markup == 'latex':
+        if markup == 'latex' :
             lastauthor = authors.pop()
-            lastauthor = ' and ' + lastauthor
+#            lastauthor = ' and ' + lastauthor
             limit = int(limit) - 1
-
+            
         return separator.join(authors[:int(limit)]) + lastauthor + \
                extension
 
-    elif interactive == "yes" and ((colls and not short_coll) or (limit.isdigit() and nb_authors > int(limit))):
+
+    elif interactive == "yes" and  ((colls and not short_coll) or (limit.isdigit() and nb_authors > int(limit))):
         out = '''
         <script>
         function toggle_authors_visibility(){
@@ -298,9 +313,9 @@ def format_element(bfo, limit, separator='; ',
         }
 
         </script>
-        ''' % {'show_less': _("Hide"),
-               'show_more': _("Show all %i authors") % nb_authors,
-               'extension': extension}
+        ''' % {'show_less':_("Hide"),
+               'show_more':_("Show all %i authors") % nb_authors,
+               'extension':extension}
 
 #        out += '<a name="show_hide" />'
         if colls:
@@ -319,19 +334,14 @@ def format_element(bfo, limit, separator='; ',
         out += '<script>set_up()</script>'
         return out
     elif nb_authors > 0:
-        if markup == 'latex' and nb_authors > 1:
-            lastauthor = authors.pop()
-            lastauthor = ' and ' + lastauthor
-        output = separator.join(authors) + lastauthor
-        # remove the dot from the end of authors list when the suffix starts with dot
-        # (to avoid two consecutive dots)
-        if suffix and output and output[-1] == suffix[0] == '.':
-            output = output[:-1]
-        return output
+        if markup == 'latex' or markup == 'bibtex':
+            if nb_authors > 1 :
+                lastauthor = authors.pop()
+                lastauthor = ' and ' + lastauthor 
+        return separator.join(authors) + lastauthor
 
 # we know the argument is unused, thanks
 # pylint: disable-msg=W0613
-
 
 def escape_values(bfo):
     """
