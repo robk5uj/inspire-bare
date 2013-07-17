@@ -371,7 +371,7 @@ def format_element(bfo, width="50", show_abstract="False"):
             out += texified("doi", doi)
         year = bfo.field("269__c")
         if year != "":
-            year = re.sub(r'(\d{4})-\d\d',r'\1',year)
+            year = re.sub(r'(\d{4})[-\d]*',r'\1',year)
             out += texified("year", year)
 
     #Erratum note stuff here
